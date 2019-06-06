@@ -1,0 +1,36 @@
+<!doctype html>
+<html class="k-material k-webkit k-webkit74" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kendo MVVM</title>
+    <link rel="stylesheet" href="css/kendo.bootstrap.min.css">
+    <link rel="stylesheet" href="css/kendo.common-material.min.css">
+    <link rel="stylesheet" href="css/kendo.material.min.css">
+    <link rel="stylesheet" href="css/kendo.material.mobile.min.css">
+    <link rel="stylesheet" href="css/app.css">
+  </head>
+<body>
+
+    <div id="preview" class="demo-section k-content wide">
+        
+    </div>
+
+    <script id="template" type="text/x-kendo-template">
+        <h1>Basic Template</h1>
+    </script>
+<script src="/js/vendor/jquery-3.4.1.min.js"></script>
+<script src="/js/vendor/kendo.all.min.js"></script>
+<script>
+    $(document).ready(function(){
+        const content = "";
+        const template = kendo.template($("#template").html());
+        setTimeout(() => $("#preview").html(template), 2000);
+        ;
+    })
+</script>
+
+
+</body>
+</html>

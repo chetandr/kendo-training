@@ -1,0 +1,139 @@
+<!doctype html>
+<html class="k-material k-webkit k-webkit74" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kendo MVVM</title>
+    <link rel="stylesheet" href="css/kendo.bootstrap.min.css">
+    <link rel="stylesheet" href="css/kendo.common-material.min.css">
+    <link rel="stylesheet" href="css/kendo.material.min.css">
+    <link rel="stylesheet" href="css/kendo.material.mobile.min.css">
+    <link rel="stylesheet" href="css/app.css">
+  </head>
+<body>
+        <div id="grid"></div>
+
+
+        <script src="/js/vendor/jquery-3.4.1.min.js"></script>
+        <script src="/js/vendor/kendo.all.min.js"></script>
+        <script>
+                var sampleData = [
+                    {ProductID: 1, ProductName: "Apple iPhone 5s", Introduced: new Date(2013, 8, 10), UnitPrice: 525, Discontinued: false, UnitsInStock: 10},
+                    {ProductID: 2, ProductName: "HTC One M8", Introduced: new Date(2014, 2, 25), UnitPrice: 425, Discontinued: false, UnitsInStock: 3},
+                    {ProductID: 3, ProductName: "Nokia 5880", Introduced: new Date(2008, 10, 2), UnitPrice: 275, Discontinued: true, UnitsInStock: 0}
+                ];
+        
+                // Custom logic start.
+                var sampleDataNextID = sampleData.length + 1;
+        
+                function getIndexById(id) {
+                    var idx,
+                        l = sampleData.length;
+        
+                    for (var j=0; j < l; j++) {
+                        if (sampleData[j].ProductID == id) {
+                            return j;
+                        }
+                    }
+                    return null;
+                }
+        
+                // Custom logic end.
+                $(document).ready(function () {
+                    var dataSource = new kendo.data.DataSource({
+                        transport: {
+                            read: function (e) {
+                                // On success.
+                                e.success(sampleData);
+                                // On failure.
+                                //e.error("XHR response", "status code", "error message");
+                            },
+                            create: function (e) {
+                                // Assign an ID to the new item.
+                                e.data.ProductID = sampleDataNextID++;
+                                // Save data item to the original datasource.
+                                sampleData.push(e.data);
+                                // On success.
+                                e.success(e.data);
+                                // On failure.
+                                //e.error("XHR response", "status code", "error message");
+                            },
+                            update: function (e) {
+                                // Locate item in original datasource and update it.
+                                sampleData[getIndexById(e.data.ProductID)] = e.data;
+                                // On success.
+                                e.success();
+                                // On failure.
+                                // e.error("XHR response", "status code", "error message");
+                            },
+                            destroy: function (e) {
+                                // Locate item in original datasource and remove it.
+                                sampleData.splice(getIndexById(e.data.ProductID), 1);
+                                // On success.
+                                e.success();
+                                // On failure.
+                                // e.error("XHR response", "status code", "error message");
+                            }
+                        },
+                        error: function (e) {
+                            // Handle data operation error.
+                            alert("Status: " + e.status + "; Error message: " + e.errorThrown);
+                        },
+                        pageSize: 10,
+                        batch: false,
+                        schema: {
+                            model: {
+                                id: "ProductID",
+                                fields: {
+                                    ProductID: { editable: false, nullable: true },
+                                    ProductName: { validation: { required: true } },
+                                    Introduced: { type: "date" },
+                                    UnitPrice: { type: "number", validation: { required: true, min: 1} },
+                                    Discontinued: { type: "boolean" },
+                                    UnitsInStock: { type: "number", validation: { min: 0, required: true } }
+                                }
+                            }
+                        }
+                    });
+        
+                    $("#grid").kendoGrid({
+                        dataSource: dataSource,
+                        pageable: true,
+                        toolbar: ["create"],
+                        columns: [
+                            { field: "ProductName", title: "Mobile Phone" },
+                            { field: "Introduced", title: "Introduced", format: "{0:yyyy/MM/dd}", width: "200px" },
+                            { field: "UnitPrice", title: "Price", format: "{0:c}", width: "120px" },
+                            { field: "UnitsInStock", title:"Units In Stock", width: "120px" },
+                            { field: "Discontinued", width: "120px" },
+                            { command: ["edit", "destroy"], title: "&nbsp;", width: "200px" }
+                        ],
+                        editable: "inline"
+                    });
+                });
+            </script>
+
+            <style>
+                .demo-section {
+                    overflow: auto;
+                }
+                .options label {
+                    display: inline-block;
+                    width: 70px;
+                }
+                .metrotable {
+                	width: 100%;
+                  border-collapse: collapse;
+                }
+
+                table.metrotable > thead > tr > th
+                {
+                    padding-top: 0;
+                    font-size: 1.4em;
+                }
+            </style>
+        
+
+</body>
+</html>
